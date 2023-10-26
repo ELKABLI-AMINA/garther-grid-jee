@@ -14,7 +14,14 @@ public class CategoryService {
         categoryRepository = new CategoryRepository();
     }
 
+    public CategoryService(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
+    }
+
     public void createCategory(Category category) {
+        if(category.getName()==null || category.getDescription()==null){
+            throw  new IllegalArgumentException("can not save this cate");
+        }
         categoryRepository.save(category);
     }
 
@@ -27,10 +34,18 @@ public class CategoryService {
     }
 
     public void updateCategory(Category category) {
+        if(category.getName()==null || category.getDescription()==null){
+            throw  new IllegalArgumentException("can not update this cate");
+        }
         categoryRepository.update(category);
     }
 
     public void deleteCategory(Long id) {
-        categoryRepository.delete(id);
+        Category repositoryById = categoryRepository.getById(id);
+        if(repositoryById==null) {
+            throw new IllegalArgumentException("can not delete category");
+        }else {
+            categoryRepository.delete(id);
+        }
     }
 }
